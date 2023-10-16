@@ -73,6 +73,13 @@ void Bank::giveLoan(int id, int value)
 }
 
 
+void Bank::deposit(int id, int value)
+{
+	auto it = std::find_if(clientAccounts.begin(), clientAccounts.end(), [&](Account *account) { return (account->getID() == id); });
+	if (it == clientAccounts.end())
+	
+}
+
 void Bank::printBankDetails(void)
 {
 	std::cout << "Bank Details:" << std::endl;	
