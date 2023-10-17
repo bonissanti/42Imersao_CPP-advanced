@@ -1,24 +1,24 @@
-// #include "account.hpp"
 #include "bank.hpp"
-#include <string>
 
 int main(void)
 {
-	Bank bank;
+	Bank *bank = new Bank();
 
-	bank.createAccount(1, 100);
-	bank.createAccount(2, 50);
-	bank.createAccount(3, 150);
+	bank->printBankDetails();
+	bank->createAccount(1, 100);
+	bank->createAccount(2, 50);
+	
+	bank->printBankDetails();
+	bank->modifyAccount(1, 50, "deposit");
+	bank->modifyAccount(4, 8, "withdraw");
 
-	bank.printBankDetails();	
-	bank.giveLoan(1, 500);
-	bank.giveLoan(3, -1000);
+	bank->printBankDetails();
+	bank->giveLoan(2, 100);
+	bank->printBankDetails();
 
-	printf("\n");
-
-	// bank.modifyAccount(1, 2000);
-	// bank.modifyAccount(2, 2000);
-
-	bank.printBankDetails();
+	bank->deleteAccount(1);
+	bank->deleteAccount(2);
+	bank->printBankDetails();
+	delete bank;
 	return (0);
 }

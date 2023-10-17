@@ -26,15 +26,22 @@ int Account::getValue(void) const
 
 void Account::setValue(int value)
 {
-	this->value = value;
+	if (value >= 0)
+		this->value = value;
+	else
+		std::cout << "Can't set negative value" << std::endl;		
 }
 
 
-void Account::receiveLoan(int value)
+void Account::receiveValue(int value)
 {
 	this->value += value;
 }
 
+int Account::getBalance(void) const
+{
+	return (value);
+}
 
 void Account::printAccountDetails()
 {

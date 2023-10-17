@@ -13,8 +13,16 @@ class Account
 		int getValue(void) const;
 		void setValue(int value);
 		void printAccountDetails();
-		void receiveLoan(int value);
+		void receiveValue(int value);
+		int getBalance(void) const;
 };
 
-
-
+struct FindAccount
+{
+	int id;
+	FindAccount(int id) : id(id) {}
+	bool operator()(Account *account) const
+	{
+		return (account->getID() == id);
+	}
+};
