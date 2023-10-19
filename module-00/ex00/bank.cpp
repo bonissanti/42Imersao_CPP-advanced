@@ -1,18 +1,24 @@
 #include "bank.hpp"
 
+Bank::~Bank()
+{
+	for (std::size_t i = 0; i < clientAccounts.size(); i++)
+		delete clientAccounts[i];
+}
+
 void Bank::createAccount(int id, int value)
 {
 	std::size_t i = 0;
 	if ((value < 0) || (value < -2147483648 && value > 2147483647))
 	{
-		std::cout << "Invalid value" << std::endl;
+		std::cout << "*** Invalid value ***" << std::endl;
 		return ;
 	}
 	while (i < clientAccounts.size())
 	{
 		if (clientAccounts[i]->getID() == id)
 		{
-			std::cout << "Account already exists" << std::endl;
+			std::cout << "*** Account already exists ***" << std::endl;
 			return ;
 		}
 		i++;

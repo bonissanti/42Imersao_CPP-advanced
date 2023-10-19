@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 struct Vector2
 {

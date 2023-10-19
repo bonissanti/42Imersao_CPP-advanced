@@ -12,6 +12,7 @@ class Bank
 	
 	public:
 		Bank() : liquidity(200000) {}
+		~Bank();
 		void createAccount(int id, int value);
 		void deleteAccount(int id);
 		void modifyAccount(int id, int value, std::string type);
