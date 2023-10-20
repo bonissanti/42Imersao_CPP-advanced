@@ -1,29 +1,63 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 
 class Worker;
 
-class Shovel
+class Tool
 {
 	public:
 		int number_of_uses;
 		Worker *current_worker;
 
-		Shovel() : number_of_uses(5), current_worker(NULL) {}
+		Tool() : number_of_uses(0), current_worker(NULL) {}
+
+		virtual void use()
+		{
+			std::cout << "Tool is used" << std::endl;
+			number_of_uses++;
+		}
+		virtual std::string getName()
+		{
+			return ("Tool");
+		}
+		virtual ~Tool() {} // virtual destructor
+};
+
+class Shovel : public Tool
+{
+	public:
+		Shovel() : Tool() {}
 
 		void use()
 		{
-			if (number_of_uses > 0)
-			{
-				std::cout << "Shovel is used" << std::endl;
-				number_of_uses--;
-			}
-			else
-				std::cout << "Shovel is broken" << std::endl;
+			std::cout << "Shovel is used" << std::endl;
+			number_of_uses++;
+		}
+		std::string getName()
+		{
+			return ("Shovel");
 		}
 };
 
-class Worker
+class Hammer : public Tool
+{
+	public:
+		Hammer() : Tool() {}
+
+		void use()
+		{
+			std::cout << "Hammer is used" << std::endl;
+			number_of_uses++;
+		}
+		std::string getName()
+		{
+			return ("Hammer");
+		}
+};
+
+class Worker : public Tool
 {
 	private:
 		// struct Position
@@ -37,61 +71,71 @@ class Worker
 		// 	int level;
 		// 	int exp;
 		// };
-		// Position coordenates;
-		// Statistic stats;
+		// Position coordonnee;
+		// Statistic stat;
+		std::vector<Tool *> tools;
 
 	public:
-		Shovel *shovel;
 		int id;
 
-		Worker(int id) : shovel(NULL), id(id) {} //Mudar id para algo incrementado
+		Worker(int id) : id(id) {} //Mudar id para algo incrementado
 
-		void takeShovel(Shovel *new_owner)
+		void takeTool(Tool *work_tool)
 		{
-		    if (new_owner->current_worker)
-		    {
-		        std::cout << "Worker " << id << " is taking shovel from worker " << new_owner->current_worker->id << std::endl; 
-		        new_owner->current_worker->shovel = NULL;
-		    }
-		    else
-		    {
-		        std::cout << "Worker " << id << " is taking shovel from storage" << std::endl;
-		    }
-		    new_owner->current_worker = this;
-		    shovel = new_owner;
+			tools.push_back(work_tool);
+			std::cout << "Worker " << id << " is taking " << work_tool->getName() << std::endl;
+			// if (work_tool->current_worker)
+			// {
+			// 	std::cout << "Worker " << id << " is taking " << work_tool->getName() << " from worker " << work_tool->current_worker->id << std::endl;
+			// 	return ;
+			// }
+			// else
+			// 	std::cout << "Worker " << id << " is took a " << work_tool->getName() << " from storage" << std::endl;
+			// tools.push_back(work_tool);
+			// work_tool->current_worker = this;
 		}
 
+	
 
-		void giveShovel()
+		void giveTool(Tool *tool)
 		{
-			if (shovel)
+			std::vector<Tool *>::iterator it = std::find(tools.begin(), tools.end(), tool);
+			if (it != tools.end())
 			{
-				std::cout << "Worker " << id << " is given back shovel\n";
-				shovel->current_worker = NULL;
-				shovel = NULL;
+				tools.erase(it);
+				std::cout << "Worker " << id << " is without a tool\n";
 			}
-			else
-				std::cout << "Worker " << id << " has no shovel" << std::endl;
 		}
 
 		~Worker()
 		{
-			giveShovel();
+			while (!tools.empty())
+			{
+				std::cout << "Worker " << id << " is giving back a tool" << std::endl;
+				giveTool(tools.back());
+			}
 		}
 };
 
 int main(void)
 {
 	Shovel *shovel = new Shovel();
+	Hammer *hammer = new Hammer();
 	Worker *worker1 = new Worker(1);
 	Worker *worker2 = new Worker(2);
 
-	worker1->takeShovel(shovel);
-	worker2->giveShovel();
-	worker2->takeShovel(shovel);
+	worker1->takeTool(shovel);
+	worker2->takeTool(shovel);
+
+	worker1->giveTool(shovel);
+	worker2->takeTool(hammer);
+
+	worker1->takeTool(hammer);
 
 	delete worker1;
 	delete worker2;
+	delete hammer;
+	delete shovel;
 
 	if (shovel)
 		std::cout << "Shovel is not deleted" << std::endl;
@@ -101,3 +145,31 @@ int main(void)
 	// delete shovel;
 	return (0);
 }
+
+
+
+
+// void takeShovel(Shovel *new_owner)
+	// {
+	//     if (new_owner->current_worker)
+	//     {
+	//         std::cout << "Worker " << id << " is taking shovel from worker " << new_owner->current_worker->id << std::endl; 
+	//         new_owner->current_worker->shovel = NULL;
+	//     }
+	//     else
+	//         std::cout << "Worker " << id << " is taking shovel from storage" << std::endl;
+	//     new_owner->current_worker = this;
+	//     shovel = new_owner;
+	// }
+
+// void giveShovel()
+	// {
+	// 	if (shovel)
+	// 	{
+	// 		std::cout << "Worker " << id << " is given back shovel\n";
+	// 		shovel->current_worker = NULL;
+	// 		shovel = NULL;
+	// 	}
+	// 	else
+	// 		std::cout << "Worker " << id << " has no shovel" << std::endl;
+	// }
